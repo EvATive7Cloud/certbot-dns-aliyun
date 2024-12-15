@@ -13,14 +13,14 @@ WAIT_FOR = 10
 
 _ext = tldextract.extract(host)
 subdomain, registered_domain = _ext.subdomain, _ext.registered_domain
-ValueKeyWord = '_acme-challenge'
+RRKeyWord = '_acme-challenge'
 if subdomain != '':
-    ValueKeyWord = ValueKeyWord + '.' + subdomain
-print(f'registered_domain: {registered_domain}, subdomain: {subdomain}, ValueKeyWord: {ValueKeyWord}')
+    RRKeyWord = RRKeyWord + '.' + subdomain
+print(f'registered_domain: {registered_domain}, subdomain: {subdomain}, RRKeyWord: {RRKeyWord}')
 
-if CLEAN_MODE:
-    print('Running in CLEAN_MODE')
-    result = subprocess.run([
+
+def clean(ValueKeyWord=None):
+    cmd = [
         'aliyun',
 
         'alidns',
@@ -30,27 +30,37 @@ if CLEAN_MODE:
         registered_domain,
 
         '--RRKeyWord',
-        ValueKeyWord,
+        RRKeyWord,
 
         '--Type',
         "TXT",
+    ]
+    if ValueKeyWord:
+        cmd.extend([
+            "--ValueKeyWord",
+            ValueKeyWord
+        ])
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    for i in json.loads(result.stdout)['DomainRecords']['Record']:
+        result = i['RecordId']
+        print(f'Got record existing: {result}')
+        subprocess.run([
+            'aliyun',
 
-        "--ValueKeyWord",
-        CERTBOT_VALIDATION
-    ], shell=True, capture_output=True, text=True)
-    result = json.loads(result.stdout)['DomainRecords']['Record'][0]['RecordId']
-    print(f'Got record existing: {result}')
-    subprocess.run([
-        'aliyun',
+            'alidns',
+            'DeleteDomainRecord',
 
-        'alidns',
-        'DeleteDomainRecord',
+            '--RecordId',
+            result
+        ], shell=True, capture_output=True, text=True)
+        print(f'Delete record: {result}')
 
-        '--RecordId',
-        result
-    ], shell=True, capture_output=True, text=True)
-    print(f'Delete record: {result}')
+
+if CLEAN_MODE:
+    print('Running in CLEAN_MODE')
+    clean(CERTBOT_VALIDATION)
 else:
+    clean()
     result = subprocess.run([
         'aliyun',
 
@@ -61,7 +71,7 @@ else:
         registered_domain,
 
         '--RR',
-        ValueKeyWord,
+        RRKeyWord,
 
         '--Type',
         "TXT",
