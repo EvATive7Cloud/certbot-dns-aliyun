@@ -9,6 +9,7 @@ import time
 host = os.environ.get('CERTBOT_DOMAIN')
 CERTBOT_VALIDATION = os.environ.get('CERTBOT_VALIDATION')
 CLEAN_MODE = 'clean' in sys.argv
+WAIT_FOR = 10
 
 _ext = tldextract.extract(host)
 subdomain, registered_domain = _ext.subdomain, _ext.registered_domain
@@ -68,5 +69,5 @@ else:
         "--Value",
         CERTBOT_VALIDATION
     ], shell=True, capture_output=True, text=True)
-    print(f'Created record, waiting for 20 seconds')
-    time.sleep(20)
+    print(f'Created record, waiting for 10 seconds')
+    time.sleep(10)
