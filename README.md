@@ -8,7 +8,7 @@
 
 ## 安装
 
-1. 安装 aliyun cli 工具
+1. 安装 aliyun cli 工具  
    安装完成后需要配置[凭证信息](https://help.aliyun.com/document_detail/110341.html)
 
 2. clone 本仓库并添加到环境变量PATH
