@@ -1,0 +1,1 @@
+pyinstaller .\alidns.py -n certbot_alidns.exe --onefile

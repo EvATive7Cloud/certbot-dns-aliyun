@@ -41,7 +41,12 @@ def clean(ValueKeyWord=None):
             ValueKeyWord
         ])
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    for i in json.loads(result.stdout)['DomainRecords']['Record']:
+    try:
+        result = json.loads(result.stdout)['DomainRecords']['Record']
+    except Exception as e:
+        print(f'Failed to get record existing: {e}')
+        exit(1)
+    for i in result:
         result = i['RecordId']
         print(f'Got record existing: {result}')
         subprocess.run([

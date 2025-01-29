@@ -8,25 +8,22 @@
 
 ## 安装
 
-1. 安装 aliyun cli 工具  
-   安装完成后需要配置[凭证信息](https://help.aliyun.com/document_detail/110341.html)
+1. 安装 [阿里云CLI](https://help.aliyun.com/zh/cli/)  
 
-2. clone 本仓库并添加到环境变量PATH
-
-1. `pip install -r requirements.txt`
+2. 从Realese下载并加入PATH
 
 3. 申请证书
 
    测试是否能正确申请：
 
    ```sh
-   certbot certonly -d *.example.com --manual --preferred-challenges dns --manual-auth-hook "alidns.bat" --manual-cleanup-hook "alidns.bat clean" --dry-run
+   certbot certonly -d *.example.com --manual --preferred-challenges dns --manual-auth-hook "certbot_alidns.exe" --manual-cleanup-hook "certbot_alidns.exe clean" --dry-run
    ```
 
    正式申请时去掉 `--dry-run` 参数：
 
    ```sh
-   certbot certonly -d *.example.com --manual --preferred-challenges dns --manual-auth-hook "alidns.bat" --manual-cleanup-hook "alidns.bat clean"
+   certbot certonly -d *.example.com --manual --preferred-challenges dns --manual-auth-hook "certbot_alidns.exe" --manual-cleanup-hook "certbot_alidns.exe clean"
    ```
 
 4. 证书续期
@@ -36,3 +33,8 @@
    ```
 
    如果以上命令没有错误，把 `--dry-run` 参数去掉。
+
+## 构建
+1. clone
+1. `pip install -r requirements.txt`
+1. `build.bat`
